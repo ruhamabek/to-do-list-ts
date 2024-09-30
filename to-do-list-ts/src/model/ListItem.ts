@@ -4,7 +4,7 @@ export interface Item {
       checked: boolean
 }
 
-class ListItems implements Item {
+export default class ListItem implements Item {
        
   constructor(
     private _id = '',
