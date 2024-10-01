@@ -1,55 +1,59 @@
-import FullList from "../model/FullList";
+import FullList from "../model/FullList"
 
 interface DOMList {
-    ul: HTMLUListElement;
-    clear(): void;
-    render(fullList: FullList): void;
+    ul: HTMLUListElement,
+    clear(): void,
+    render(fullList: FullList): void,
 }
 
-export default class TemplateList implements DOMList {
-    
-     static instance:TemplateList = new TemplateList();
-         ul: HTMLUListElement;
-   
-     private constructor(){
-      this.ul = document.getElementById("listItem") as HTMLUListElement;
-     }
+export default class ListTemplate implements DOMList {
+
+    ul: HTMLUListElement
+
+    static instance: ListTemplate = new ListTemplate()
+
+    private constructor() {
+        this.ul = document.getElementById("listItems") as HTMLUListElement
+    }
+
     clear(): void {
-       this.ul.innerHTML = '';
+        this.ul.innerHTML = ''
     }
 
     render(fullList: FullList): void {
+        this.clear()
 
-      fullList.list.forEach((item) => {
-          const li = document.createElement("li") as HTMLLIElement;
-          li.className = "input";
+        fullList.list.forEach(item => {
+            const li = document.createElement("li") as HTMLLIElement
+            li.className = "item"
 
-          const check = document.createElement("input") as HTMLInputElement;
-          check.type = "checkbox";
-          check.id = item.id;
-          check.checked = item.checked;
-          li.append(check);
-          check.addEventListener('change' , ()=>{
-               item.checked = !item.checked;
-               fullList.save();
-            });
+            const check = document.createElement("input") as HTMLInputElement
+            check.type = "checkbox"
+            check.id = item.id
+            check.checked = item.checked
+            li.append(check)
 
-          const label = document.createElement("label") as HTMLLabelElement;
-          label.htmlFor = item.id;
-          label.textContent = item.item;
-          li.append(label);
+            check.addEventListener('change', () => {
+                item.checked = !item.checked
+                fullList.save()
+            })
 
-          const button = document.createElement("button") as HTMLButtonElement;
-          button.className = 'button';
-          button.innerText = 'X';
-          li.append(button);
-          button.addEventListener('click' , ()=> {
-                 fullList.clearList();
-                 this.render(fullList);
-          });
+            const label = document.createElement("label") as HTMLLabelElement
+            label.htmlFor = item.id
+            label.textContent = item.item
+            li.append(label)
 
-          this.ul.append(li);
-      }) 
-      
-  }  
+            const button = document.createElement("button") as HTMLButtonElement
+            button.className = 'button'
+            button.textContent = 'X'
+            li.append(button)
+
+            button.addEventListener('click', () => {
+                fullList.removeItem(item.id)
+                this.render(fullList)
+            })
+
+            this.ul.append(li)
+        })
+    }
 }
