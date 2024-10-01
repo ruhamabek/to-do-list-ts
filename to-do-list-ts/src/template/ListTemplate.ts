@@ -20,7 +20,36 @@ export default class TemplateList implements DOMList {
 
     render(fullList: FullList): void {
 
+      fullList.list.forEach((item) => {
+          const li = document.createElement("li") as HTMLLIElement;
+          li.className = "input";
+
+          const check = document.createElement("input") as HTMLInputElement;
+          check.type = "checkbox";
+          check.id = item.id;
+          check.checked = item.checked;
+          li.append(check);
+          check.addEventListener('change' , ()=>{
+               item.checked = !item.checked;
+               fullList.save();
+            });
+
+          const label = document.createElement("label") as HTMLLabelElement;
+          label.htmlFor = item.id;
+          label.textContent = item.item;
+          li.append(label);
+
+          const button = document.createElement("button") as HTMLButtonElement;
+          button.className = 'button';
+          button.innerText = 'X';
+          li.append(button);
+          button.addEventListener('click' , ()=> {
+                 fullList.clearList();
+                 this.render(fullList);
+          });
+
+          this.ul.append(li);
+      }) 
       
-  }
-   
+  }  
 }
